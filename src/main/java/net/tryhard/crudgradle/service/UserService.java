@@ -23,9 +23,14 @@ public class UserService {
                 .orElse(null);
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+         List<User> userList = userRepository.findAll();
+         List<UserDTO> userDTOList = null;
+        for (User user :userList) {
+            userDTOList.add(userMapper.mapUserDTO(user));
 
+        }
+        return userDTOList;
     }
 
     public User saveUser(User user) {

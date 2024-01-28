@@ -2,6 +2,8 @@ package net.tryhard.crudgradle.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.tryhard.crudgradle.dto.UserDTO;
+import net.tryhard.crudgradle.mapper.UserMapper;
+import net.tryhard.crudgradle.mapper.UserMapperImpl;
 import net.tryhard.crudgradle.model.User;
 import net.tryhard.crudgradle.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/users")
-    public List<User> findAll(Model model) {
-        List<User> users = userService.findAll();
+    public List<UserDTO> findAll(Model model) {
+        List<UserDTO> users = userService.findAll();
         model.addAttribute("users", users);
 
         return users;
@@ -27,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping("/user-create")
-    public User createUserForm(User user) {
-        return user;
+    public String createUserForm(User user) {
+        return "user-create";
     }
 
     @PostMapping("/user-create")
