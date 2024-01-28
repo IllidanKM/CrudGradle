@@ -2,6 +2,8 @@ package net.tryhard.crudgradle.controller;
 
 import lombok.RequiredArgsConstructor;
 import net.tryhard.crudgradle.dto.UserDTO;
+import net.tryhard.crudgradle.dto.UserDTOCreate;
+import net.tryhard.crudgradle.dto.UserDTOUpdate;
 import net.tryhard.crudgradle.mapper.UserMapper;
 import net.tryhard.crudgradle.mapper.UserMapperImpl;
 import net.tryhard.crudgradle.model.User;
@@ -13,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//заменил все выводы с редиректа и Entity на UserDTO
+
 @RestController
-@RequiredArgsConstructor //zamena konstruktora s Autowired
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
+
 
 
     @GetMapping("/users")
@@ -29,26 +31,26 @@ public class UserController {
     }
 
     @PostMapping("/user-create")
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userMapper.mapUserDTO(userService.saveUser(userDTO));
+    public UserDTO createUser(@RequestBody UserDTOCreate userDTOCreate) {
+        return userService.saveUser(userDTOCreate);
     }
 
 
-    @GetMapping("user-delete/{id}") //вместо редиректа вывожу список всех пользователей
+    @DeleteMapping("user-delete/{id}")
     public Long deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return id;
     }
 
 
-    @GetMapping("/user-update/{id}")
+    @GetMapping("/user-get/{id}")
     public UserDTO getUserForm(@PathVariable("id") Long id) {
         return userService.findById(id);
     }
 
-    @PostMapping("/user-update")
-    public UserDTO updateUser(UserDTO userDTO) {
-        return userMapper.mapUserDTO(userService.saveUser(userDTO));
+    @PutMapping("/user-update")
+    public UserDTO updateUser(@RequestParam Long id,UserDTOUpdate userDTOUpdate) {
+        return userService.updateUser(id,userDTOUpdate);
 
     }
 
