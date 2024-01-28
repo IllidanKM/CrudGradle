@@ -8,20 +8,19 @@ import org.mapstruct.ap.spi.MapStructProcessingEnvironment;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 
-@Component
+
 @RequiredArgsConstructor
-@Mapper
+@Mapper(componentModel = "spring")
+
+
 public abstract class UserMapper {
-    UserMapper INSTANCE= Mappers.getMapper(UserMapper.class);
-    abstract User mapUser(UserDTO userDTO);
 
-    public UserDTO  mapUserDTO(User user){
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        return userDTO;
+    public abstract User mapUser(UserDTO userDTO);
 
-    }
+    public abstract UserDTO mapUserDTO(User user) ;
+
 
 
 }

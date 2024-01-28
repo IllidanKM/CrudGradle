@@ -13,9 +13,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserMapper userMapper;
+    private final UserMapperImpl userMapper;
     private final UserRepository userRepository;
-
 
 
     public UserDTO findById(Long id) {
@@ -25,19 +24,12 @@ public class UserService {
     }
 
     public List<UserDTO> findAll() {
-         List<User> userList = userRepository.findAll();
-         List<UserDTO> userDTOList = null;
-        for (User user :userList) {
-            userDTOList.add(userMapper.mapUserDTO(user));
 
-        }
-        return userDTOList;
+        return userRepository.findAll().stream().map(userMapper::mapUserDTO).toList();
     }
 
-    public UserDTO saveUser(User user) {
-        UserMapperImpl mapper = new UserMapperImpl();
-
-        return mapper.mapUserDTO(userRepository.save(user));
+    public User saveUser(UserDTO userDTO) {
+        return userRepository.save(userMapper.mapUser(userDTO));
 
     }
 
@@ -45,4 +37,7 @@ public class UserService {
         userRepository.deleteById(id);
 
     }
+
+
+
 }

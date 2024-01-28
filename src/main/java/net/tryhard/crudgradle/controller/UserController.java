@@ -12,51 +12,44 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 //заменил все выводы с редиректа и Entity на UserDTO
 @RestController
 @RequiredArgsConstructor //zamena konstruktora s Autowired
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
+
 
     @GetMapping("/users")
-    public List<UserDTO> findAll(Model model) {
-        List<UserDTO> usersDto = userService.findAll();
-        model.addAttribute("users", usersDto);
+    public List<UserDTO> findAll() {
+        return userService.findAll();
 
-        return usersDto;
-
-    }
-
-    @GetMapping("/user-create")
-    public UserDTO createUserForm(User user) {
-        var mapper = new UserMapperImpl();
-        return mapper.mapUserDTO(user);
     }
 
     @PostMapping("/user-create")
-    public UserDTO createUser(@RequestBody User user) {
-
-        UserDTO userDTO= userService.saveUser(user);
-        return userDTO;
+    public UserDTO createUser(@RequestBody UserDTO userDTO) {
+        return userMapper.mapUserDTO(userService.saveUser(userDTO));
     }
+
 
     @GetMapping("user-delete/{id}") //вместо редиректа вывожу список всех пользователей
-    public List<UserDTO> deleteUser(@PathVariable("id") Long id){
+    public Long deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
-        List<UserDTO> usersDto = userService.findAll();
-        return usersDto;
+        return id;
     }
+
+
     @GetMapping("/user-update/{id}")
-    public UserDTO updateUserForm(@PathVariable("id") Long id,Model model){
-        UserDTO userDTO = userService.findById(id);
-        model.addAttribute("user",userDTO);
+    public UserDTO getUserForm(@PathVariable("id") Long id) {
         return userService.findById(id);
     }
+
     @PostMapping("/user-update")
-    public UserDTO updateUser(User user){
-       UserDTO userDTO= userService.saveUser(user);
-        return userDTO;
+    public UserDTO updateUser(UserDTO userDTO) {
+        return userMapper.mapUserDTO(userService.saveUser(userDTO));
+
     }
 
 }
