@@ -3,6 +3,7 @@ package net.tryhard.crudgradle.service;
 import lombok.RequiredArgsConstructor;
 import net.tryhard.crudgradle.mapper.UserMapper;
 import net.tryhard.crudgradle.dto.UserDTO;
+import net.tryhard.crudgradle.mapper.UserMapperImpl;
 import net.tryhard.crudgradle.model.User;
 import net.tryhard.crudgradle.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,10 @@ public class UserService {
         return userDTOList;
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
+    public UserDTO saveUser(User user) {
+        UserMapperImpl mapper = new UserMapperImpl();
+
+        return mapper.mapUserDTO(userRepository.save(user));
 
     }
 

@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//заменил все выводы с редиректа и Entity на UserDTO
 @RestController
 @RequiredArgsConstructor //zamena konstruktora s Autowired
 public class UserController {
@@ -21,40 +21,42 @@ public class UserController {
 
     @GetMapping("/users")
     public List<UserDTO> findAll(Model model) {
-        List<UserDTO> users = userService.findAll();
-        model.addAttribute("users", users);
+        List<UserDTO> usersDto = userService.findAll();
+        model.addAttribute("users", usersDto);
 
-        return users;
+        return usersDto;
 
     }
 
     @GetMapping("/user-create")
-    public String createUserForm(User user) {
-        return "user-create";
+    public UserDTO createUserForm(User user) {
+        var mapper = new UserMapperImpl();
+        return mapper.mapUserDTO(user);
     }
 
     @PostMapping("/user-create")
-    public String createUser(@RequestBody User user) {
+    public UserDTO createUser(@RequestBody User user) {
 
-        userService.saveUser(user);
-        return "redirect:/users";
+        UserDTO userDTO= userService.saveUser(user);
+        return userDTO;
     }
 
-    @GetMapping("user-delete/{id}")
-    public String deleteUser(@PathVariable("id") Long id){
+    @GetMapping("user-delete/{id}") //вместо редиректа вывожу список всех пользователей
+    public List<UserDTO> deleteUser(@PathVariable("id") Long id){
         userService.deleteById(id);
-        return "redirect:/users";
+        List<UserDTO> usersDto = userService.findAll();
+        return usersDto;
     }
     @GetMapping("/user-update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id,Model model){
+    public UserDTO updateUserForm(@PathVariable("id") Long id,Model model){
         UserDTO userDTO = userService.findById(id);
         model.addAttribute("user",userDTO);
-        return"/user-update";
+        return userService.findById(id);
     }
     @PostMapping("/user-update")
-    public String updateUser(User user){
-        userService.saveUser(user);
-        return "redirect:/users";
+    public UserDTO updateUser(User user){
+       UserDTO userDTO= userService.saveUser(user);
+        return userDTO;
     }
 
 }
