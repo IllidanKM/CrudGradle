@@ -23,22 +23,29 @@ public class UserService {
     private final UserRepository userRepository;
 
 
-    public UserDTO findById(Long id) {
+    public UserDTO findById(Long id) throws NotFoundException {
         return userRepository.findById(id)
                 .map(userMapper::mapUserDTO)
-                .orElse(null);
+                .orElseThrow(() -> new NotFoundException("user with id " +id + " not found." ));
     }
 
-    public List<UserDTO> findAll() {
+    public List<UserDTO> findAll(int pageNumber,int pageSize) {
+        if (pageSize> 50){
+            pageSize= 50;
+        } else if (pageSize<0) {
+            pageSize = 0;
 
-        return userRepository.findAll(PageRequest.of(2,100))
+        }
+
+        return userRepository.findAll(PageRequest.of(pageNumber,pageSize))
                 .stream()
                 .map(userMapper::mapUserDTO)
                 .toList();
     }
 
     public UserDTO saveUser(UserDTOCreate userDTOCreate) {
-        return userMapper.mapUserDTO(userRepository.save(userMapper.mapUser(userDTOCreate)));
+        User user = userRepository.save(userMapper.mapUser(userDTOCreate));
+        return userMapper.mapUserDTO(user);
 
     }
 

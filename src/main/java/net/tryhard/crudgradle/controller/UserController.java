@@ -23,10 +23,10 @@ public class UserController {
     private final UserService userService;
 
 
-
-    @GetMapping("/users")
-    public List<UserDTO> findAll() {
-        return userService.findAll();
+///user/{userId}/account/{accountId}
+    @GetMapping("/users//{pageNumber}/{pageSize}")
+    public List<UserDTO> findAll(@PathVariable("pageNumber")Integer pageNumber,@PathVariable("pageSize")Integer pageSize) {
+        return userService.findAll(pageNumber, pageSize);
 
     }
 
