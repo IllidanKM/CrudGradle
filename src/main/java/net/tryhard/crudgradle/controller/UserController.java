@@ -1,42 +1,38 @@
 package net.tryhard.crudgradle.controller;
 
+import lombok.RequiredArgsConstructor;
+import net.tryhard.crudgradle.dto.UserDTO;
 import net.tryhard.crudgradle.model.User;
 import net.tryhard.crudgradle.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequiredArgsConstructor //zamena konstruktora s Autowired
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @GetMapping("/users")
-    public String findAll(Model model) {
+    public List<User> findAll(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
 
-        return "user-list";
+        return users;
 
     }
 
     @GetMapping("/user-create")
-    public String createUserForm(User user) {
-        return "user-create";
+    public User createUserForm(User user) {
+        return user;
     }
 
     @PostMapping("/user-create")
-    public String createUser(User user) {
+    public String createUser(@RequestBody User user) {
 
         userService.saveUser(user);
         return "redirect:/users";
@@ -49,8 +45,8 @@ public class UserController {
     }
     @GetMapping("/user-update/{id}")
     public String updateUserForm(@PathVariable("id") Long id,Model model){
-        User user = userService.findById(id);
-        model.addAttribute("user",user);
+        UserDTO userDTO = userService.findById(id);
+        model.addAttribute("user",userDTO);
         return"/user-update";
     }
     @PostMapping("/user-update")

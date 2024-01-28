@@ -1,24 +1,26 @@
 package net.tryhard.crudgradle.service;
 
+import lombok.RequiredArgsConstructor;
+import net.tryhard.crudgradle.mapper.UserMapper;
+import net.tryhard.crudgradle.dto.UserDTO;
 import net.tryhard.crudgradle.model.User;
 import net.tryhard.crudgradle.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
+    private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);  //getOne is old
 
+    public UserDTO findById(Long id) {
+        return userRepository.findById(id)
+                .map(userMapper::mapUserDTO)
+                .orElse(null);
     }
 
     public List<User> findAll() {
