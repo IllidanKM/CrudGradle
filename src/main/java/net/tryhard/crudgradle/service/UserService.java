@@ -25,11 +25,14 @@ public class UserService {
 
     public List<UserDTO> findAll() {
 
-        return userRepository.findAll().stream().map(userMapper::mapUserDTO).toList();
+        return userRepository.findAll().
+                stream()
+                .map(userMapper::mapUserDTO)
+                .toList();
     }
 
-    public User saveUser(UserDTO userDTO) {
-        return userRepository.save(userMapper.mapUser(userDTO));
+    public UserDTO saveUser(UserDTO userDTO) {
+        return userMapper.mapUserDTO(userRepository.save(userMapper.mapUser(userDTO)));
 
     }
 

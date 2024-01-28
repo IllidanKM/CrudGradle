@@ -19,7 +19,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserMapper userMapper;
+
 
 
     @GetMapping("/users")
@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/user-create")
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userMapper.mapUserDTO(userService.saveUser(userDTO));
+        return userService.saveUser(userDTO);
     }
 
 
@@ -48,7 +48,7 @@ public class UserController {
 
     @PostMapping("/user-update")
     public UserDTO updateUser(UserDTO userDTO) {
-        return userMapper.mapUserDTO(userService.saveUser(userDTO));
+        return userService.saveUser(userDTO);
 
     }
 
